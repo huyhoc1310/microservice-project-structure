@@ -1,0 +1,10 @@
+SQLAlchemy
+Flask_Caching
+Flask_SQLAlchemy
+Flask_Bcrypt
+Flask-Migrate
+dynaconf
+Flask-RESTful
+Flask-RESTPlus
+mysqlclient
+redis

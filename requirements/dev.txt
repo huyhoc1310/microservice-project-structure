@@ -1,0 +1,8 @@
+-r prod.txt
+
+# Testing
+factory-boy
+click
+Flask-Testing
+flake8
+coverage
