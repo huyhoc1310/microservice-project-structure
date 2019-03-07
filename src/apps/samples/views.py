@@ -2,15 +2,24 @@ from flask_restplus import Api, Resource
 from flask import Blueprint, abort, jsonify, request
 
 from .models import Sample
+from ..cores.base_error import NotFoundError, NotAuthorizedError, ValidationError
 
 
 blueprint = Blueprint('sample', __name__)
 api = Api(blueprint, doc='/doc/')
 
 
+@api.errorhandler(NotFoundError)
+@api.errorhandler(NotAuthorizedError)
+@api.errorhandler(ValidationError)
+# @api.errorhandler(InvalidServiceError)
+def handle_error(error):
+    return error.to_dict(), getattr(error, 'code')
+
 @api.route('/')
 class Index(Resource):
     def get(self):
+        raise NotAuthorizedError(message="Custom message")
         return jsonify({
             'samples': [sample.title for sample in Sample.query.all()]
         })
