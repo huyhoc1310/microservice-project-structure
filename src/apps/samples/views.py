@@ -1,16 +1,19 @@
 from flask_restplus import Api, Resource
 from flask import Blueprint, abort, jsonify, request
 
+from src.apps.cores.exceptions import register_errorhandlers, NotFound
 from .models import Sample
 
 
 blueprint = Blueprint('sample', __name__)
 api = Api(blueprint, doc='/doc/')
+register_errorhandlers(api)
 
 
 @api.route('/')
 class Index(Resource):
     def get(self):
+        raise NotFound('custom message.')
         return jsonify({
             'samples': [sample.title for sample in Sample.query.all()]
         })

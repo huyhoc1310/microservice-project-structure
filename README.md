@@ -12,14 +12,14 @@ Project description here...
 
 
 ### Configurations
-- Remove extension `.org` from `configs/`
+- Remove extension `.org` from `src/configs/`
 
   ```
   settings.toml.orig
   ```
 - Set required environment variables:
   ```
-  export PROJECT_ROOT_FOR_DYNACONF=src/configs
+  cp .env.orig .env
   ```
 
 ### Enviroment settings
