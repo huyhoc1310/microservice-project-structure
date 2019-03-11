@@ -2,14 +2,14 @@ from flask import Flask
 
 from .apps.cores.libs import db, migrate, config
 from .apps.samples.views import blueprint as sample_bp
-from .apps.cores.exceptions import register_errorhandlers
+from .apps.cores.exceptions import register_error_handlers
 
 
 def create_app():
     app = Flask(__name__)
     register_extensions(app)
     register_blueprints(app)
-    register_errorhandlers(app)
+    register_error_handlers(app)
     return app
 
 

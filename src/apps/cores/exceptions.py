@@ -1,11 +1,12 @@
+import json
 from datetime import datetime
 
 from flask import jsonify
-from werkzeug.exceptions import NotFound as _NotFound
+from werkzeug.exceptions import NotFound as _NotFound, UnprocessableEntity as _UnprocessableEntity
 from dynaconf import settings
 
 
-def register_errorhandlers(app):
+def register_error_handlers(app):
     def err_response(error):
         return error.to_json(), error.code
 
@@ -15,6 +16,9 @@ def register_errorhandlers(app):
 
         if isinstance(error, BaseError):
             return err_response(error)
+
+        if type(error) is _UnprocessableEntity:
+            return err_response(UnprocessableEntity(error=error))
 
         return err_response(InternalServerError())
 
@@ -52,7 +56,7 @@ class BadRequest(BaseError):
 
 
 class Unauthorized(BaseError):
-    def __init__(self, message='Unauthrozied.'):
+    def __init__(self, message='Unauthorized.'):
         super().__init__(code=401, message=message)
 
 
@@ -74,3 +78,9 @@ class MethodNotAllow(BaseError):
 class InternalServerError(BaseError):
     def __init__(self, message='Internal server error.'):
         super().__init__(code=500, message=message)
+
+
+class UnprocessableEntity(BaseError):
+    def __init__(self, error=None):
+        self.message = error.description
+        super().__init__(code=422, message=self.message)

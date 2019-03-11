@@ -230,3 +230,5 @@ fabric.properties
 # Ignore custom dev environment
 */configs/settings.toml
 */configs/.secrets.toml
+
+.idea/

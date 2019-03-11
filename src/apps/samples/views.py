@@ -1,13 +1,13 @@
 from flask_restplus import Api, Resource
 from flask import Blueprint, abort, jsonify, request
 
-from src.apps.cores.exceptions import register_errorhandlers, NotFound
-from .models import Sample
+from src.apps.cores.exceptions import register_error_handlers, NotFound, UnprocessableEntity
+from .models import Sample, sample_schema, samples_schema
 
 
 blueprint = Blueprint('sample', __name__)
 api = Api(blueprint, doc='/doc/')
-register_errorhandlers(api)
+register_error_handlers(api)
 
 
 @api.route('/')
@@ -22,14 +22,12 @@ class Index(Resource):
 @api.route('/new')
 class New(Resource):
     def post(self):
-        title = request.form.get('title')
-        body = request.form.get('body')
-
-        if not title or not body:
-            abort(400, 'bad request')
-
-        Sample.create(title=title, body=body)
-        return 200
+        request_data = request.get_json()
+        data, errors = sample_schema.load(request_data)
+        if errors:
+            abort(422, errors)
+        Sample.create(title=data.get('title'), body=data.get('body'))
+        return 201
 
 
 @api.route('/get/<string:sample_id>')
