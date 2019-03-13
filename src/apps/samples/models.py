@@ -22,5 +22,5 @@ class SampleSchema(Schema):
     body = fields.Str(validate=validate.Length(max=100, error='Max length = 200'))
 
 
-sample_schema = SampleSchema()
+sample_schema = SampleSchema(only=('title', 'body'))
 samples_schema = SampleSchema(many=True)

@@ -1,4 +1,3 @@
-import json
 from datetime import datetime
 
 from flask import jsonify
@@ -83,4 +82,4 @@ class InternalServerError(BaseError):
 class UnprocessableEntity(BaseError):
     def __init__(self, error=None):
         self.message = error.description
-        super().__init__(code=422, message=self.message)
+        super().__init__(code=400, message=self.message)

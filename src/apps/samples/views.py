@@ -1,8 +1,8 @@
 from flask_restplus import Api, Resource
 from flask import Blueprint, abort, jsonify, request
 
-from src.apps.cores.exceptions import register_error_handlers, NotFound, UnprocessableEntity
-from .models import Sample, sample_schema, samples_schema
+from src.apps.cores.exceptions import register_error_handlers, NotFound
+from .models import Sample, sample_schema
 
 
 blueprint = Blueprint('sample', __name__)
@@ -36,11 +36,8 @@ class Get(Resource):
         sample = Sample.find_by_id(int(sample_id))
         if not sample:
             abort(404, 'not found')
-
-        return {'sample': {
-            'title': sample.title,
-            'body': sample.body,
-        }}
+        result = sample_schema.dump(sample).data
+        return result
 
 
 @api.route('/update/<string:sample_id>')
@@ -49,7 +46,7 @@ class Update(Resource):
         title = request.form.get('title')
         body = request.form.get('body')
 
-        # TODO: protect mass assignemnt
+        # TODO: protect mass assignment
 
         sample = Sample.find_by_id(int(sample_id))
         if not sample:
