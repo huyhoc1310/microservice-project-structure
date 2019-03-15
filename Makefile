@@ -12,7 +12,7 @@ install:
 	pip install -r requirements/dev.txt
 
 lint:
-	flake8 --exclude=migrations,venv
+	flake8 --exclude=migrations,venv --max-line-length=120 .
 
 test:
 	ENV_FOR_DYNACONF=testing python -m unittest -v
