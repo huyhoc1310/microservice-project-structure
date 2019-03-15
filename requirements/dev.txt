@@ -1,8 +1,9 @@
 -r prod.txt
 
 # Testing
-factory-boy
-click
-Flask-Testing
-flake8
-coverage
+factory-boy==2.11.1
+Click==7.0
+Flask-Testing==0.7.1
+flake8==3.7.7
+autopep8==1.4.3
+coverage==4.5.2
