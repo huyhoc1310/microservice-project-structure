@@ -3,8 +3,7 @@ from datetime import datetime
 from flask import jsonify
 from dynaconf import settings
 from werkzeug.exceptions import (
-    NotFound as _NotFound,
-    UnprocessableEntity as _UnprocessableEntity,
+    NotFound as _NotFound
 )
 
 
@@ -15,9 +14,6 @@ def register_error_handlers(app):
     def handle_err(error):
         if type(error) is _NotFound:
             return err_response(NotFound())
-
-        if type(error) is _UnprocessableEntity:
-            return err_response(UnprocessableEntity(error=error))
 
         if isinstance(error, BaseError):
             return err_response(error)
@@ -83,6 +79,5 @@ class InternalServerError(BaseError):
 
 
 class UnprocessableEntity(BaseError):
-    def __init__(self, error=None):
-        super().__init__(code=400)
-        self.message = error.description
+    def __init__(self, message='Validation Errors.'):
+        super().__init__(code=400, message=message)

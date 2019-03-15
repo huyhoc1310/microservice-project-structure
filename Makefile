@@ -2,7 +2,7 @@ help:
 	@echo "  start         run server"
 	@echo "  install       install dependencies"
 	@echo "  lint          check style with flake8"
-	@echo "  autopep8    auto format code pep8 with autopep8"
+	@echo "  autopep8      auto format code pep8 with autopep8"
 	@echo "  test          run all test suites"
 	@echo "  coverage      export test coverage report"
 

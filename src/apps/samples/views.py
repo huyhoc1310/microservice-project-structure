@@ -1,7 +1,12 @@
-from flask_restplus import Api, Resource
+from flask_restplus import Api
 from flask import Blueprint, abort, jsonify, request
 
-from src.apps.cores.exceptions import register_error_handlers, NotFound
+from src.apps.cores.exceptions import (
+    register_error_handlers,
+    NotFound,
+    UnprocessableEntity,
+)
+from src.apps.cores.views import BaseView
 from .models import Sample
 from .schemas import sample_schema
 
@@ -12,7 +17,7 @@ register_error_handlers(api)
 
 
 @api.route('/')
-class Index(Resource):
+class Index(BaseView):
     def get(self):
         raise NotFound('custom message.')
         return jsonify({
@@ -21,28 +26,27 @@ class Index(Resource):
 
 
 @api.route('/new')
-class New(Resource):
+class New(BaseView):
     def post(self):
         request_data = request.get_json()
         data, errors = sample_schema.load(request_data)
         if errors:
-            abort(422, errors)
+            raise UnprocessableEntity(errors)
         Sample.create(title=data.get('title'), body=data.get('body'))
         return 201
 
 
 @api.route('/get/<string:sample_id>')
-class Get(Resource):
+class Get(BaseView):
     def get(self, sample_id):
         sample = Sample.find_by_id(int(sample_id))
         if not sample:
             abort(404, 'not found')
-        result = sample_schema.dump(sample).data
-        return result
+        return self.render_json_response(sample, status_code=200, schema=sample_schema)
 
 
 @api.route('/update/<string:sample_id>')
-class Update(Resource):
+class Update(BaseView):
     def post(self, sample_id):
         title = request.form.get('title')
         body = request.form.get('body')
@@ -53,12 +57,12 @@ class Update(Resource):
         if not sample:
             abort(404, 'not found')
 
-        sample.update(title=title, body=body)
-        return 200
+        sample_updated = sample.update(title=title, body=body)
+        return self.render_json_response(sample_updated, status_code=200, schema=sample_schema)
 
 
 @api.route('/delete/<string:sample_id>')
-class Delete(Resource):
+class Delete(BaseView):
     def delete(self, sample_id):
         sample = Sample.find_by_id(int(sample_id))
         if not sample:
