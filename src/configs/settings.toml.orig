@@ -1,6 +1,6 @@
 [default]
 SQLALCHEMY_TRACK_MODIFICATIONS=false
-TIMESTAMP_FORMAT='%Y-%m-%d %H:%M:%S'
+FULL_DATETIME='%Y-%m-%d %H:%M:%S'
 
 [development]
 DEBUG=true

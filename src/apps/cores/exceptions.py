@@ -1,8 +1,11 @@
 from datetime import datetime
 
 from flask import jsonify
-from werkzeug.exceptions import NotFound as _NotFound, UnprocessableEntity as _UnprocessableEntity
 from dynaconf import settings
+from werkzeug.exceptions import (
+    NotFound as _NotFound,
+    UnprocessableEntity as _UnprocessableEntity,
+)
 
 
 def register_error_handlers(app):
@@ -13,11 +16,11 @@ def register_error_handlers(app):
         if type(error) is _NotFound:
             return err_response(NotFound())
 
-        if isinstance(error, BaseError):
-            return err_response(error)
-
         if type(error) is _UnprocessableEntity:
             return err_response(UnprocessableEntity(error=error))
+
+        if isinstance(error, BaseError):
+            return err_response(error)
 
         return err_response(InternalServerError())
 
@@ -25,7 +28,7 @@ def register_error_handlers(app):
 
 
 def err_template(code, message):
-    timestamp_format = settings.get('TIMESTAMP_FORMAT')
+    timestamp_format = settings.get('FULL_DATETIME')
     return {
         'response': {
             'error_code': code,
@@ -81,5 +84,5 @@ class InternalServerError(BaseError):
 
 class UnprocessableEntity(BaseError):
     def __init__(self, error=None):
+        super().__init__(code=400)
         self.message = error.description
-        super().__init__(code=400, message=self.message)

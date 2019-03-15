@@ -2,7 +2,8 @@ from flask_restplus import Api, Resource
 from flask import Blueprint, abort, jsonify, request
 
 from src.apps.cores.exceptions import register_error_handlers, NotFound
-from .models import Sample, sample_schema
+from .models import Sample
+from .schemas import sample_schema
 
 
 blueprint = Blueprint('sample', __name__)
